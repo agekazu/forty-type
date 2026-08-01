@@ -9,6 +9,7 @@
     "lint": "oxlint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "npm run build && playwright test",
     "deploy:dry-run": "npm run build && wrangler deploy --dry-run",
     "preview": "vite preview"
   },

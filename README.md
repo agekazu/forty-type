@@ -16,7 +16,8 @@ npm run dev
 ```sh
 npm run lint
 npm run test
+npm run test:e2e
 npm run build
 ```
 
-設計判断・MVP仕様・開発計画は[`docs/`](docs/)にあります。
+設計判断・MVP仕様・開発計画は[`docs/`](docs/)にあります。Workers Buildsの設定値は[`docs/cloudflare-builds.md`](docs/cloudflare-builds.md)を参照してください。
