@@ -1,4 +1,6 @@
 import { useState, type DragEvent } from 'react'
+import { KeyboardDiagram } from './features/keyboard/KeyboardDiagram'
+import { resolveCharacter } from './features/keymap/resolve'
 import type { Keymap } from './features/keymap/types'
 import { parseVil } from './features/keymap/vil'
 
@@ -9,6 +11,7 @@ type ImportState =
 
 function App() {
   const [importState, setImportState] = useState<ImportState>({ status: 'idle' })
+  const [targetCharacter, setTargetCharacter] = useState('a')
 
   const loadFile = async (file?: File) => {
     if (!file) return
@@ -31,6 +34,10 @@ function App() {
     event.preventDefault()
     void loadFile(event.dataTransfer.files[0])
   }
+
+  const resolved = importState.status === 'success'
+    ? resolveCharacter(importState.keymap, targetCharacter)
+    : undefined
 
   return (
     <main className="min-h-screen bg-slate-950 px-6 py-16 text-slate-100">
@@ -67,6 +74,34 @@ function App() {
             {importState.status === 'error' && <p className="text-rose-300">{importState.message}</p>}
           </div>
         </section>
+        {importState.status === 'success' && (
+          <section className="mt-8 rounded-xl border border-slate-700 bg-slate-900 p-6">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold">次に押すキー</h2>
+                <p className="mt-1 text-sm text-slate-400">案内する文字をキーボードで入力できます。</p>
+              </div>
+              <label className="text-sm text-slate-300">
+                練習する文字
+                <input
+                  className="ml-3 w-14 rounded-md border border-slate-600 bg-slate-950 px-3 py-2 text-center text-lg focus:border-cyan-400 focus:outline-none"
+                  value={targetCharacter}
+                  maxLength={1}
+                  onChange={(event) => setTargetCharacter(event.target.value.slice(-1))}
+                />
+              </label>
+            </div>
+            {resolved?.supported ? (
+              <div className="mt-6">
+                <KeyboardDiagram keymap={importState.keymap} stroke={resolved.stroke} />
+              </div>
+            ) : (
+              <p className="mt-6 rounded-lg bg-rose-950/50 p-4 text-rose-200" role="status">
+                {resolved?.reason ?? '文字を入力してください。'}
+              </p>
+            )}
+          </section>
+        )}
       </div>
     </main>
   )
