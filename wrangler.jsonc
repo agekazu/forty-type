@@ -1,7 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "forty-type",
-  "main": "src/worker.ts",
   "compatibility_date": "2026-08-01",
   "assets": {
     "directory": "./dist",
