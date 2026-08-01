@@ -9,6 +9,7 @@
     "lint": "oxlint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "deploy:dry-run": "npm run build && wrangler deploy --dry-run",
     "preview": "vite preview"
   },
   "dependencies": {
