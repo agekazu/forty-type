@@ -16,9 +16,9 @@ describe('cornixLpLayout', () => {
     expect(cornixLpLayout.keys).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: 'L00', matrix: { row: 0, column: 0 } }),
-        expect.objectContaining({ id: 'L32', matrix: { row: 3, column: 2 } }),
+        expect.objectContaining({ id: 'L35', matrix: { row: 3, column: 5 } }),
         expect.objectContaining({ id: 'R00', matrix: { row: 0, column: 0 } }),
-        expect.objectContaining({ id: 'R32', matrix: { row: 3, column: 2 } }),
+        expect.objectContaining({ id: 'R35', matrix: { row: 3, column: 5 } }),
       ]),
     )
   })
