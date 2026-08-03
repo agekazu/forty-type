@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { cornixLpLayout } from '../keymap/cornix-lp'
 import type { Keymap } from '../keymap/types'
 import { KeyboardDiagram } from './KeyboardDiagram'
 
@@ -7,7 +8,7 @@ const keymap: Keymap = {
   keyboardId: 'cornix-lp',
   layers: [{
     index: 0,
-    assignments: Array.from({ length: 48 }, (_, index) => ({ keyId: index < 24 ? `L${Math.min(3, Math.floor(index / 7))}${index < 21 ? index % 7 : index - 21}` : `R${Math.min(3, Math.floor((index - 24) / 7))}${index < 45 ? (index - 24) % 7 : index - 45}`, keycode: 'KC_A' })),
+    assignments: cornixLpLayout.keys.map(({ id: keyId }) => ({ keyId, keycode: 'KC_A' })),
   }],
 }
 
