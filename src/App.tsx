@@ -1,6 +1,7 @@
 import { useState, type DragEvent } from 'react'
 import type { Keymap } from './features/keymap/types'
 import { parseVil } from './features/keymap/vil'
+import { PracticeSession } from './features/practice/PracticeSession'
 
 type ImportState =
   | { status: 'idle' }
@@ -67,6 +68,9 @@ function App() {
             {importState.status === 'error' && <p className="text-rose-300">{importState.message}</p>}
           </div>
         </section>
+        {importState.status === 'success' && (
+          <PracticeSession keymap={importState.keymap} />
+        )}
       </div>
     </main>
   )
