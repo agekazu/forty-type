@@ -1,6 +1,9 @@
 # Cloudflare Workers Builds
 
 `forty-type` は静的アセットWorkerとして配信し、`wrangler.jsonc` をデプロイ設定の正とする。
+`worker/index.js` の明示的な `fetch` ハンドラーは、非本番ブランチでの
+`wrangler versions upload` にも有効なWorkerバージョンを登録するために使用する。
+静的アセットはWorkerより先に配信され、ハンドラーはAssets bindingへフォールバックする。
 
 Workers Buildsでは次の設定を使用する。
 
