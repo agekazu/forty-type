@@ -33,7 +33,7 @@ export const KeyboardDiagram = ({ keymap, stroke }: KeyboardDiagramProps) => (
   <figure>
     <svg
       className="w-full"
-      viewBox="-0.25 -0.25 16.5 5.1"
+      viewBox="-0.25 -0.25 16.5 5.3"
       role="img"
       aria-label="Cornix LP キーボード。水色は次のキー、ピンクはShift、黄色はレイヤーキーです。"
     >

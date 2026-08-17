@@ -1,4 +1,5 @@
 import { useState, type DragEvent } from 'react'
+import { loadStoredVil, saveVil } from './features/keymap/storage'
 import type { Keymap } from './features/keymap/types'
 import { parseVil } from './features/keymap/vil'
 import { PracticeSession } from './features/practice/PracticeSession'
@@ -8,8 +9,14 @@ type ImportState =
   | { status: 'success'; fileName: string; keymap: Keymap }
   | { status: 'error'; message: string }
 
+const restoreImportState = (): ImportState => {
+  const stored = loadStoredVil()
+  if (!stored) return { status: 'idle' }
+  return { status: 'success', fileName: stored.fileName, keymap: stored.keymap }
+}
+
 function App() {
-  const [importState, setImportState] = useState<ImportState>({ status: 'idle' })
+  const [importState, setImportState] = useState<ImportState>(restoreImportState)
 
   const loadFile = async (file?: File) => {
     if (!file) return
@@ -18,7 +25,9 @@ function App() {
       return
     }
     try {
-      const keymap = parseVil(await file.text())
+      const source = await file.text()
+      const keymap = parseVil(source)
+      saveVil(file.name, source)
       setImportState({ status: 'success', fileName: file.name, keymap })
     } catch (error) {
       setImportState({
@@ -62,7 +71,7 @@ function App() {
           <div className="mt-4 min-h-6" aria-live="polite">
             {importState.status === 'success' && (
               <p className="text-emerald-300">
-                {importState.fileName} を読み込みました（{importState.keymap.layers.length}レイヤー）。
+                {importState.fileName} を読み込みました（{importState.keymap.layers.length}レイヤー）。このブラウザに保存しているため、再読み込み後も使えます。
               </p>
             )}
             {importState.status === 'error' && <p className="text-rose-300">{importState.message}</p>}
