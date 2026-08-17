@@ -1,7 +1,8 @@
-export type SessionStatus = 'idle' | 'active' | 'complete'
+export type SessionStatus = 'idle' | 'active' | 'complete' | 'ended'
 
 export interface PracticeSessionState {
-  prompt: string
+  prompts: readonly string[]
+  promptIndex: number
   position: number
   attempts: number
   correctInputs: number
@@ -17,24 +18,46 @@ export interface SessionScore {
   wordsPerMinute: number
 }
 
-export const createSession = (prompt: string): PracticeSessionState => ({
-  prompt,
+export const currentPrompt = (session: PracticeSessionState): string =>
+  session.prompts[session.promptIndex] ?? ''
+
+export const createSession = (prompts: readonly string[] = []): PracticeSessionState => ({
+  prompts,
+  promptIndex: 0,
   position: 0,
   attempts: 0,
   correctInputs: 0,
   status: 'idle',
 })
 
-export const startSession = (session: PracticeSessionState, now: number): PracticeSessionState => ({
-  ...session,
-  position: 0,
-  attempts: 0,
-  correctInputs: 0,
-  status: 'active',
-  startedAt: now,
-  endedAt: undefined,
-  lastInput: undefined,
-})
+export const startSession = (session: PracticeSessionState, now: number): PracticeSessionState => {
+  if (session.prompts.length === 0 || session.prompts.some((prompt) => prompt.length === 0)) {
+    return session
+  }
+  return {
+    ...session,
+    promptIndex: 0,
+    position: 0,
+    attempts: 0,
+    correctInputs: 0,
+    status: 'active',
+    startedAt: now,
+    endedAt: undefined,
+    lastInput: undefined,
+  }
+}
+
+export const endSession = (
+  session: PracticeSessionState,
+  now: number,
+): PracticeSessionState => {
+  if (session.status !== 'active') return session
+  return {
+    ...session,
+    status: 'ended',
+    endedAt: now,
+  }
+}
 
 export const recordInput = (
   session: PracticeSessionState,
@@ -42,16 +65,20 @@ export const recordInput = (
   now: number,
 ): PracticeSessionState => {
   if (session.status !== 'active' || character.length !== 1) return session
-  const correct = character === session.prompt[session.position]
+  const prompt = currentPrompt(session)
+  const correct = character === prompt[session.position]
   const position = session.position + (correct ? 1 : 0)
-  const complete = position >= session.prompt.length
+  const promptComplete = position >= prompt.length
+  const nextIndex = session.promptIndex + 1
+  const sessionComplete = promptComplete && nextIndex >= session.prompts.length
   return {
     ...session,
-    position,
+    promptIndex: promptComplete && !sessionComplete ? nextIndex : session.promptIndex,
+    position: promptComplete && !sessionComplete ? 0 : position,
     attempts: session.attempts + 1,
     correctInputs: session.correctInputs + (correct ? 1 : 0),
-    status: complete ? 'complete' : 'active',
-    endedAt: complete ? now : undefined,
+    status: sessionComplete ? 'complete' : 'active',
+    endedAt: sessionComplete ? now : undefined,
     lastInput: { character, correct },
   }
 }

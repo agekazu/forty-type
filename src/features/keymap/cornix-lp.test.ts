@@ -22,4 +22,28 @@ describe('cornixLpLayout', () => {
       ]),
     )
   })
+
+  it('places the right half as a reflection of the left, not a copy', () => {
+    const left = cornixLpLayout.keys.filter((item) => item.hand === 'left')
+    const right = cornixLpLayout.keys.filter((item) => item.hand === 'right')
+    const axis = 7.45
+
+    for (const leftKey of left) {
+      const rightKey = right.find((item) => (
+        item.matrix.row === leftKey.matrix.row
+        && item.matrix.column === 5 - leftKey.matrix.column
+      ))
+
+      expect(rightKey, `missing mirror of ${leftKey.id}`).toBeDefined()
+      expect(rightKey!.position.y).toBeCloseTo(leftKey.position.y)
+      expect((leftKey.position.x + rightKey!.position.x) / 2 + 0.45).toBeCloseTo(axis)
+    }
+
+    const leftInner = left.find((item) => item.id === 'L05')!
+    const rightInner = right.find((item) => item.id === 'R00')!
+    const leftOuter = left.find((item) => item.id === 'L00')!
+    expect(leftInner.position.y).toBeGreaterThan(leftOuter.position.y)
+    expect(rightInner.position.y).toBeCloseTo(leftInner.position.y)
+    expect(rightInner.position.y).toBeGreaterThan(right.find((item) => item.id === 'R05')!.position.y)
+  })
 })
