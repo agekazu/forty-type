@@ -43,16 +43,10 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-16 text-slate-100">
+    <main className="min-h-screen bg-slate-950 px-6 py-8 text-slate-100">
       <div className="mx-auto max-w-2xl">
-        <p className="font-mono text-sm tracking-[0.2em] text-cyan-300">FORTY-TYPE</p>
-        <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-6xl">
-          40%キーボードのためのタイピング練習
-        </h1>
-        <p className="mt-6 text-lg leading-8 text-slate-300">
-          Vialのキーマップをブラウザ内で読み込み、次に押すキーをキーボード図で案内するゲームです。
-        </p>
-        <section className="mt-10 rounded-xl border border-slate-700 bg-slate-900 p-6">
+        <h1 className="font-mono text-sm tracking-[0.2em] text-cyan-300">FORTY-TYPE</h1>
+        <section className="mt-6 rounded-xl border border-slate-700 bg-slate-900 p-6">
           <h2 className="text-xl font-semibold">キーマップを読み込む</h2>
           <label
             className="mt-4 flex cursor-pointer flex-col items-center rounded-lg border-2 border-dashed border-slate-600 px-6 py-10 text-center transition hover:border-cyan-400 focus-within:border-cyan-400"
